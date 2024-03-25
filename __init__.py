@@ -132,7 +132,12 @@ class StartDebugServer(Operator):
 
     @classmethod
     def poll(cls, context):
-        return is_debugpy_installed()
+        if not is_debugpy_installed():
+            cls.poll_message_set(
+                "Couldn't find \"debugpy\". Try to install it from the addon's preferences."
+            )
+            return False
+        return True
 
     def execute(self, context):
         addon_prefs = context.preferences.addons[__package__].preferences
